@@ -1,7 +1,42 @@
 <main>
   <app-learning-resources />
-
   <hr />
 
+  <!-- app-auth renders a login form. Submitting it calls AuthService.authenticate(),
+       which updates the activePermission signal to 'admin', 'user', or 'guest'. -->
   <app-auth />
+
+  <!--
+    HOW <ng-template> + a structural directive works:
+    ──────────────────────────────────────────────────
+    • <ng-template> is never rendered by default — Angular keeps it as an inert
+      blueprint (TemplateRef) in memory, invisible in the DOM.
+
+    • Placing a structural directive attribute on it (e.g. appAuth="admin") hands
+      the blueprint to that directive, along with a ViewContainerRef slot.
+
+    • The directive then decides — based on its own logic — when to call
+      viewContainerRef.createEmbeddedView(templateRef)  ← stamps content into DOM
+      or viewContainerRef.clear()                        ← removes it from DOM
+
+    • appAuth="admin" passes the string "admin" as the directive's required input
+      (aliased to 'userType'). The directive compares it to the active permission
+      signal and shows/hides accordingly.
+
+    The *ngIf shorthand (* syntax) is just sugar: Angular desugars
+      *ngIf="condition"  →  <ng-template [ngIf]="condition">
+    Our appAuth directive is doing the same thing manually, without the * sugar.
+  -->
+
+  <!-- Rendered only when activePermission() === 'admin' -->
+  <!-- <ng-template appAuth="admin">
+    <p>Only Admins Can See This</p>
+  </ng-template> -->
+  <p *appAuth="'admin'" class="protected-content admin">Only Admins Can See This</p>
+
+  <!-- Rendered only when activePermission() === 'user' -->
+  <p *appAuth="'user'" class="protected-content authenticated">Only Users Can See This</p>
+
+  <!-- Rendered only when activePermission() === 'guest' (the default/unauthenticated state) -->
+  <p *appAuth="'guest'" class="protected-content unauthenticated">Only Guests Can See This</p>
 </main>

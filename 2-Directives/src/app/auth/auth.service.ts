@@ -11,6 +11,7 @@ export class AuthService {
   authenticate(email: string, password: string) {
     console.log(email, password);
     if (email === 'admin@example.com' && password === 'admin') {
+      console.log("Admin")
       this.activePermission.set('admin');
     } else if (email === 'user@example.com' && password === 'user') {
       this.activePermission.set('user');
