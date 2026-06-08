@@ -6,6 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TemperaturePipe implements PipeTransform {
   transform(
+    //The transform function is only executed when the input changes otherwise it will use it's old cached value .
     value: string | number | null,
     inputType: 'cel' | 'fah',
     outputType?: 'cel' | 'fah',
@@ -26,7 +27,7 @@ export class TemperaturePipe implements PipeTransform {
     } else if (inputType === 'fah' && outputType === 'cel') {
       output = ((val - 32) * (5 / 9)).toFixed(2) + symbol('cel');
     } else {
-      output = (val).toFixed(2) + symbol(inputType);
+      output = val.toFixed(2) + symbol(inputType);
     }
     return output;
   }
