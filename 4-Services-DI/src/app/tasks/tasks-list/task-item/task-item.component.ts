@@ -1,7 +1,8 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, effect, inject, input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { Task, TaskStatus } from '../../task.model';
+import { TasksService } from '../../tasks.service';
 
 @Component({
   selector: 'app-task-item',
@@ -10,8 +11,9 @@ import { Task, TaskStatus } from '../../task.model';
   templateUrl: './task-item.component.html',
   styleUrl: './task-item.component.css',
 })
-export class TaskItemComponent {
+export class TaskItemComponent implements OnChanges {
   task = input.required<Task>();
+  private tasksService=inject(TasksService);
   taskStatus = computed(() => {
     switch (this.task().status) {
       case 'OPEN':
@@ -24,6 +26,13 @@ export class TaskItemComponent {
         return 'Open';
     }
   });
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['task'] || changes['taskStatus']){
+      console.log(this.task());
+      console.log(this.taskStatus());
+    }
+  }
 
   onChangeTaskStatus(taskId: string, status: string) {
     let newStatus: TaskStatus = 'OPEN';
@@ -41,5 +50,6 @@ export class TaskItemComponent {
       default:
         break;
     }
+    this.tasksService.updateTaskStatus(taskId,newStatus);
   }
 }
