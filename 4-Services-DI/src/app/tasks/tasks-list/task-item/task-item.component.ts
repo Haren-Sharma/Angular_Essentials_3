@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { Task, TaskStatus } from '../../task.model';
 import { TasksService } from '../../tasks.service';
+import { taskServiceToken } from '../../../../main';
 
 @Component({
   selector: 'app-task-item',
@@ -13,7 +14,7 @@ import { TasksService } from '../../tasks.service';
 })
 export class TaskItemComponent implements OnChanges {
   task = input.required<Task>();
-  private tasksService=inject(TasksService);
+  private tasksService=inject(taskServiceToken);
   taskStatus = computed(() => {
     switch (this.task().status) {
       case 'OPEN':
