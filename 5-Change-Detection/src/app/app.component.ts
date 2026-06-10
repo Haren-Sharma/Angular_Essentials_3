@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { CounterComponent } from './counter/counter.component';
 import { MessagesComponent } from './messages/messages.component';
