@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -6,11 +6,9 @@ import { Injectable, signal } from '@angular/core';
 export class MessagesService {
   constructor() {}
   
-  private messages= signal<string[]>([]);
-
-  allMessages=this.messages.asReadonly()
+  messages: string[] = [];
 
   onAddMessage(message:string){
-    this.messages.update((oldTasks)=>[...oldTasks,message])
+    this.messages=[...this.messages,message]
   }
 }

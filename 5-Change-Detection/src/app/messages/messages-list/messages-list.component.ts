@@ -12,7 +12,7 @@ export class MessagesListComponent {
   constructor(private messagesService: MessagesService) {}
 
   get messages() {
-    return this.messagesService.allMessages;
+    return this.messagesService.messages;
   }
 
   get debugOutput() {
