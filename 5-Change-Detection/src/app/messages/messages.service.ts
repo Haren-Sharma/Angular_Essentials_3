@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -7,11 +7,11 @@ import { BehaviorSubject } from 'rxjs';
 export class MessagesService {
   constructor() {}
 
-  messages: string[] = [];
+  messages=signal<string[]>([]);
   messages$ = new BehaviorSubject<string[]>([]);
 
   onAddMessage(message: string) {
-    this.messages = [...this.messages, message];
-    this.messages$.next(this.messages);
+    this.messages.update((oldMsgs)=>[...oldMsgs,message])
+    this.messages$.next(this.messages());
   }
 }
