@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
 import { MessagesService } from '../messages.service';
 
 @Component({
@@ -6,13 +12,29 @@ import { MessagesService } from '../messages.service';
   standalone: true,
   templateUrl: './messages-list.component.html',
   styleUrl: './messages-list.component.css',
-  changeDetection:ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MessagesListComponent {
-  constructor(private messagesService: MessagesService) {}
+export class MessagesListComponent implements OnInit {
+  constructor(
+    private messagesService: MessagesService,
+    private cdRef: ChangeDetectorRef,
+    private desRef: DestroyRef,
+  ) {}
 
-  get messages() {
-    return this.messagesService.messages;
+  messages:string[]=[]
+
+  ngOnInit(): void {
+    const subscription = this.messagesService.messages$.subscribe(
+      //this method will be executed every time a new value is emitted
+      (messages) => {
+        this.messages=messages
+        this.cdRef.markForCheck(); //manually trigeering change detection 
+      },
+    );
+    this.desRef.onDestroy(() => {
+      //cleanup
+      subscription.unsubscribe();
+    });
   }
 
   get debugOutput() {
